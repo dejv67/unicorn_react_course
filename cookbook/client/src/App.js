@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import './App.css';
 
 function App() {
@@ -10,7 +9,7 @@ function App() {
         </h1>
         <a
           className="App-link"
-          href="https:/google.com"
+          href="https://google.com"
           target="_blank"
           rel="noopener noreferrer"
         >
