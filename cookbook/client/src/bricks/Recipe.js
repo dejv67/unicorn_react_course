@@ -5,11 +5,11 @@ import './css/Recipe.css'
 
 const Recipe = (props) => {
     return (
-        <div class="card">
-            <img src={props.imgUri} class="card-img-top"/>
-                <div class="card-body">
-                    <h5 class="card-title">{props.name}</h5>
-                    <p class="card-text">{props.description}</p>
+        <div className="card">
+            <img src={props.imgUri} className="card-img-top"/>
+                <div className="card-body">
+                    <h5 className="card-title">{props.name}</h5>
+                    <p className="card-text">{props.description}</p>
                     {/*<ul>*/}
                     {/*    {props.ingredients.map((item, index) => (*/}
                     {/*        <li key={index}>{item.id}</li>*/}

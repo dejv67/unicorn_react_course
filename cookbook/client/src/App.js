@@ -1,6 +1,7 @@
 import './App.css';
 import data from './bricks/mockup';
 import RecipeList from './bricks/RecipeList';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import { Icon } from '@mdi/react';  // Ensure you use a named import
 import { mdiBookOpenVariant } from '@mdi/js';
 

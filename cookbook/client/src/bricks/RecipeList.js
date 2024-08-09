@@ -1,12 +1,11 @@
 import Recipe from "./Recipe";
-import 'bootstrap/dist/css/bootstrap.min.css';
 import './css/RecipeList.css'
 
 const RecipeList = (props) => {
 
     function getRecipeList(recipeList) {
-        return recipeList.map((recipe, index) => (
-            <div className="col-12 col-sm-6 col-md-4 col-lg-3 mb-4" key={index}>
+        return recipeList.map((recipe) => (
+            <div className="col-12 col-sm-6 col-md-4 col-lg-3 mb-4" key={recipe.id}>
                 <div className="Recipe">
                     <Recipe
                         classname={"Recipe"}
