@@ -1,23 +1,20 @@
 import './App.css';
+import data from './bricks/mockup';
+import RecipeList from './bricks/RecipeList';
+import { Icon } from '@mdi/react';  // Ensure you use a named import
+import { mdiBookOpenVariant } from '@mdi/js';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <h1>
-          David´s cookbook
-        </h1>
-        <a
-          className="App-link"
-          href="https://google.com"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Find your meal!
-        </a>
-      </header>
-    </div>
-  );
+    return (
+        <div className="App">
+            {/* Add className to Icon for styling */}
+            <h1 className="App-h1">
+                <Icon className="mdi" path={mdiBookOpenVariant} size={2} color="white" />
+                David’s Cookbook
+            </h1>
+            <RecipeList recipeList={data} />
+        </div>
+    );
 }
 
 export default App;
