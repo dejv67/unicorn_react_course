@@ -1,15 +1,38 @@
-import React, { useState } from "react";
-import Navbar from "react-bootstrap/Navbar";
-import Button from "react-bootstrap/Button";
-import Icon from "@mdi/react";
-import { mdiMagnifyMinusOutline, mdiMagnifyPlusOutline } from "@mdi/js";
+import React, { useState, useMemo } from "react";
 import RecipeBigDetail from "./RecipeBigDetail";
 import RecipeSmallDetail from "./RecipeSmallDetail";
+
 import './css/RecipeList.css'
+
+import Navbar from "react-bootstrap/Navbar";
+import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
+
+import Icon from "@mdi/react";
+import { mdiMagnifyMinusOutline, mdiMagnifyPlusOutline, mdiMagnify } from "@mdi/js";
 
 const RecipeList = (props) => {
     const [viewType, setViewType] = useState("bigDetail");
     const isBigDetail = viewType === "bigDetail";
+    const [searchBy, setSearchBy] = useState("");
+
+    const filteredRecipeList = useMemo(() => {
+        return props.recipeList.filter((item) => {
+            return (
+                item.name.toLocaleLowerCase().includes(searchBy.toLocaleLowerCase()) ||
+                item.description.toLocaleLowerCase().includes(searchBy.toLocaleLowerCase())
+            );
+        });
+    }, [searchBy]);
+
+    function handleSearch(event) {
+        event.preventDefault();
+        setSearchBy(event.target["searchInput"].value);
+    }
+
+    function handleSearchDelete(event) {
+        if (!event.target.value) setSearchBy("");
+    }
 
     function getRecipeList(recipeList, detailView) {
         return recipeList.map((recipe) => (
@@ -39,29 +62,47 @@ const RecipeList = (props) => {
 
     return (
         <div>
-            <Navbar style={{ backgroundColor: '#282c34' }}>
+            <Navbar style={{ backgroundColor: '#282c34', marginBottom: '25px' }}>
                 <div className="container-fluid">
                     <Navbar.Brand style={{ color: 'white' }}>Recipes</Navbar.Brand>
-                    <Button
-                        style={{marginBottom: '30px'}}
-                        onClick={() =>
-                            setViewType((currentState) => {
-                                if (currentState === "bigDetail") return "smallDetail";
-                                else return "bigDetail";
-                            })
-                        }
-                    >
-                        <Icon size={1} path={isBigDetail ? mdiMagnifyMinusOutline : mdiMagnifyPlusOutline} />{" "}
-                        {isBigDetail ? "Malý detail" : "Velký detail"}
-                    </Button>
+                    <div>
+                        <Form className="d-flex" onSubmit={handleSearch}>
+                            <Form.Control
+                                id={"searchInput"}
+                                style={{ maxWidth: "200px" }}
+                                type="search"
+                                placeholder="Search"
+                                aria-label="Search"
+                                onChange={handleSearchDelete}
+                            />
+                            <Button
+                                style={{ marginRight: "15px" }}
+                                variant="outline-success"
+                                type="submit"
+                            >
+                                <Icon size={1} path={mdiMagnify} />
+                            </Button>
+                            <Button
+                                onClick={() =>
+                                    setViewType((currentState) => {
+                                        if (currentState === "bigDetail") return "smallDetail";
+                                        else return "bigDetail";
+                                    })
+                                }
+                            >
+                                <Icon size={1} path={isBigDetail ? mdiMagnifyMinusOutline : mdiMagnifyPlusOutline} />{" "}
+                                {isBigDetail ? "Malý detail" : "Velký detail"}
+                            </Button>
+                        </Form>
+                    </div>
                 </div>
             </Navbar>
             <div className="container-fluid">
                 <div className="row justify-content-center">
                     {isBigDetail ? (
-                        getRecipeList(props.recipeList, "big")
+                        getRecipeList(filteredRecipeList, "big")
                     ) : (
-                        getRecipeList(props.recipeList, "small")
+                        getRecipeList(filteredRecipeList, "small")
                     )}
                 </div>
             </div>
