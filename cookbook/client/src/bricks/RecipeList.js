@@ -12,7 +12,7 @@ import Icon from "@mdi/react";
 import { mdiMagnifyMinusOutline, mdiMagnifyPlusOutline, mdiMagnify } from "@mdi/js";
 
 const RecipeList = (props) => {
-    const [viewType, setViewType] = useState("bigDetail");
+    const [viewType, setViewType] = useState("smallDetail");
     const isBigDetail = viewType === "bigDetail";
     const [searchBy, setSearchBy] = useState("");
 
