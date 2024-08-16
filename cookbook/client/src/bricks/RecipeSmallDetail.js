@@ -1,6 +1,7 @@
 import React from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './css/RecipeSmallDetail.css'
+import IngredientList from "./IngredientList";
 
 
 const RecipeSmallDetail = (props) => {
@@ -13,11 +14,7 @@ const RecipeSmallDetail = (props) => {
                     <p className="card-text truncated-text" title={props.description}>
                         {props.description}
                     </p>
-                    {/*<ul>*/}
-                    {/*    {props.ingredients.map((item, index) => (*/}
-                    {/*        <li key={index}>{item.id}</li>*/}
-                    {/*    ))}*/}
-                    {/*</ul>*/}
+                    <IngredientList ingredients = {props.ingredients}/>
                 </div>
             </div>
         </div>
