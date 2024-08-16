@@ -2,9 +2,6 @@ import React, { useState, useEffect } from "react";
 import { mdiLoading } from '@mdi/js';
 import styles from "../App.css";
 import {Icon} from "@mdi/react";
-import RecipeBigDetail from "./RecipeBigDetail";
-import RecipeSmallDetail from "./RecipeSmallDetail";
-
 
 const IngredientList = (props) => {
     const [ingredientListCall, setIngredientListCall] = useState({
