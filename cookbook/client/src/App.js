@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import styles from './App.css';
-import data from './bricks/mockup';
 import RecipeList from './bricks/RecipeList';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Icon } from '@mdi/react';  // Ensure you use a named import
@@ -21,7 +20,7 @@ function App() {
             } else {
                 setRecipeListCall({ state: "success", data: responseJson });
             }
-        });
+        }).catch(error => {setRecipeListCall({ state: "error", error: error })});
     }, []);
 
     function getRecipes() {
