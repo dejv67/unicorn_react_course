@@ -23,7 +23,7 @@ const RecipeList = (props) => {
                 item.description.toLocaleLowerCase().includes(searchBy.toLocaleLowerCase())
             );
         });
-    }, [searchBy]);
+    },[searchBy, props.recipeList]);
 
     function handleSearch(event) {
         event.preventDefault();
@@ -36,7 +36,7 @@ const RecipeList = (props) => {
 
     function getRecipeList(recipeList, detailView) {
         return recipeList.map((recipe) => (
-            <div className="col-12 col-sm-6 col-md-4 col-lg-3 mb-4" key={recipe.id}>
+            <div className="col-12 col-sm-6 col-md-6 col-lg-3 mb-4" key={recipe.id}>
                 <div className="Recipe">
                     {detailView === "big" ? (
                         <RecipeBigDetail
@@ -62,39 +62,43 @@ const RecipeList = (props) => {
 
     return (
         <div>
-            <Navbar style={{ backgroundColor: '#282c34', marginBottom: '25px' }}>
+            <Navbar collapseOnSelect expand="sm" style={{ backgroundColor: '#282c34', marginBottom: '25px' }}>
                 <div className="container-fluid">
                     <Navbar.Brand style={{ color: 'white' }}>Recipes</Navbar.Brand>
-                    <div>
-                        <Form className="d-flex" onSubmit={handleSearch}>
-                            <Form.Control
-                                id={"searchInput"}
-                                style={{ maxWidth: "200px" }}
-                                type="search"
-                                placeholder="Search"
-                                aria-label="Search"
-                                onChange={handleSearchDelete}
-                            />
-                            <Button
-                                style={{ marginRight: "15px" }}
-                                variant="outline-success"
-                                type="submit"
-                            >
-                                <Icon size={1} path={mdiMagnify} />
-                            </Button>
-                            <Button
-                                onClick={() =>
-                                    setViewType((currentState) => {
-                                        if (currentState === "bigDetail") return "smallDetail";
-                                        else return "bigDetail";
-                                    })
-                                }
-                            >
-                                <Icon size={1} path={isBigDetail ? mdiMagnifyMinusOutline : mdiMagnifyPlusOutline} />{" "}
-                                {isBigDetail ? "Malý detail" : "Velký detail"}
-                            </Button>
-                        </Form>
-                    </div>
+                    <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+                    <Navbar.Collapse style={{ justifyContent: "right" }}>
+                        <div>
+                            <Form className="d-flex" onSubmit={handleSearch}>
+                                <Form.Control
+                                    id={"searchInput"}
+                                    style={{ maxWidth: "200px" }}
+                                    type="search"
+                                    placeholder="Search"
+                                    aria-label="Search"
+                                    onChange={handleSearchDelete}
+                                />
+                                <Button
+                                    style={{ marginRight: "15px" }}
+                                    variant="outline-success"
+                                    type="submit"
+                                >
+                                    <Icon size={1} path={mdiMagnify} />
+                                </Button>
+                                <Button
+                                    className={"d-none d-md-block"}
+                                    onClick={() =>
+                                        setViewType((currentState) => {
+                                            if (currentState === "bigDetail") return "smallDetail";
+                                            else return "bigDetail";
+                                        })
+                                    }
+                                >
+                                    <Icon size={1} path={isBigDetail ? mdiMagnifyMinusOutline : mdiMagnifyPlusOutline} />{" "}
+                                    {isBigDetail ? "Malý detail" : "Velký detail"}
+                                </Button>
+                            </Form>
+                        </div>
+                    </Navbar.Collapse>
                 </div>
             </Navbar>
             <div className="container-fluid">
