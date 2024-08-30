@@ -1,3 +1,13 @@
 .Recipe {
     margin: 0px 15px 25px; /* Vertikalni mezery mezi jednotlivými kartami */
 }
+
+.hide-text-on-small {
+    display: inline-block;
+}
+
+@media (max-width: 682px) {
+    .hide-text-on-small {
+        display: none;
+    }
+}

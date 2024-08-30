@@ -98,13 +98,12 @@ const RecipeList = (props) => {
                                     {isBigDetail ? "Malý detail" : "Velký detail"}
                                 </Button>
                                 <Button
-                                    className={"d-none d-md-block"}
-                                    style={{ marginRight: "15px" }}
+                                    style={{marginRight: "15px"}}
                                     variant={"light"}
                                     type="submit"
                                 >
-                                    <Icon size={1} path={mdiPlus} />{" "}
-                                    Vytvořit recept
+                                    <Icon size={1} path={mdiPlus}/>{" "}
+                                    <span className="hide-text-on-small"> Vytvořit recept</span>
                                 </Button>
                             </Form>
                         </div>
