@@ -6,30 +6,10 @@
   box-sizing: border-box; /* Zajišťuje, že padding se zahrne do šířky */
 }
 
-.App-h1 {
-  margin-top: 50px;
-  margin-bottom: 50px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(20px + 2vmin);
-  color: white;
-}
-
 .mdi {
   margin: 20px 20px; /* Add space between icon and title */
 }
 
-.loading {
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.error {
-  background-color: lightpink;
-  padding: 32px;
+.custom-padding-top {
+  padding-top: 100px;
 }

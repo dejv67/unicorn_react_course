@@ -1,63 +1,52 @@
-import { useState, useEffect } from "react";
-import styles from './App.css';
-import RecipeList from './bricks/RecipeList';
+import React, { useState, useEffect } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Icon } from '@mdi/react';  // Ensure you use a named import
 import { mdiBookOpenVariant, mdiLoading } from '@mdi/js';
+import {Outlet, useNavigate} from "react-router-dom";
+import {Container} from "react-bootstrap";
+import Nav from "react-bootstrap/Nav";
+import Navbar from "react-bootstrap/Navbar";
+import Offcanvas from "react-bootstrap/Offcanvas";
 
 function App() {
-    const [recipeListCall, setRecipeListCall] = useState({
-        state: "pending",
-    });
-
-    useEffect(() => {
-        fetch(`http://localhost:3000/recipe/list`, {
-            method: "GET",
-        }).then(async (response) => {
-            const responseJson = await response.json();
-            if (response.status >= 400) {
-                setRecipeListCall({ state: "error", error: responseJson });
-            } else {
-                setRecipeListCall({ state: "success", data: responseJson });
-            }
-        }).catch(error => {setRecipeListCall({ state: "error", error: error })});
-    }, []);
-
-    function getRecipes() {
-        switch (recipeListCall.state) {
-            case "pending":
-                return (
-                    <div className={styles.loading}>
-                        <Icon size={2} path={mdiLoading} spin={true} />
-                    </div>
-                );
-            case "success":
-                return (
-                    <>
-                        <RecipeList recipeList={recipeListCall.data} />
-                    </>
-                );
-            case "error":
-                return (
-                    <div className={styles.error}>
-                        <div>Nepodařilo se načíst data o třídě.</div>
-                        <br />
-                        <pre>{JSON.stringify(recipeListCall.error, null, 2)}</pre>
-                    </div>
-                );
-            default:
-                return null;
-        }
-    }
-
+    let navigate = useNavigate();
     return (
         <div className="App">
-            {/* Add className to Icon for styling */}
-            <h1 className="App-h1">
-                <Icon className="mdi" path={mdiBookOpenVariant} size={2} color="white" />
-                David’s Cookbook
-            </h1>
-            {getRecipes()}
+            <Navbar
+                fixed="top"
+                expand={"sm"}
+                className="mb-3"
+                bg="dark"
+                variant="dark"
+            >
+                <Container fluid>
+                    <Navbar.Brand onClick={() => navigate("/")}>
+                        <Icon className="mdi" path={mdiBookOpenVariant} size={1} color="white"/>
+                        David’s Cookbook
+                    </Navbar.Brand>
+                    <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-sm`}/>
+                    <Navbar.Offcanvas id={`offcanvasNavbar-expand-sm`}>
+                        <Offcanvas.Header closeButton>
+                            <Offcanvas.Title id={`offcanvasNavbarLabel-expand-sm`}>
+                                Simple School
+                            </Offcanvas.Title>
+                        </Offcanvas.Header>
+                        <Offcanvas.Body>
+                            <Nav className="justify-content-end flex-grow-1 pe-3">
+                                <Nav.Link onClick={() => navigate("/recipeList")}>
+                                    Recepty
+                                </Nav.Link>
+                                <Nav.Link onClick={() => navigate("/ingredientList")}>
+                                    Ingredience
+                                </Nav.Link>
+                            </Nav>
+                        </Offcanvas.Body>
+                    </Navbar.Offcanvas>
+                </Container>
+            </Navbar>
+            <main className="custom-padding-top">
+                <Outlet/>
+            </main>
         </div>
     );
 }
