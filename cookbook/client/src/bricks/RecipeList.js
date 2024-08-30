@@ -9,7 +9,7 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 
 import Icon from "@mdi/react";
-import { mdiMagnifyMinusOutline, mdiMagnifyPlusOutline, mdiMagnify } from "@mdi/js";
+import {mdiMagnifyMinusOutline, mdiMagnifyPlusOutline, mdiMagnify, mdiPlus} from "@mdi/js";
 
 const RecipeList = (props) => {
     const [viewType, setViewType] = useState("smallDetail");
@@ -86,6 +86,7 @@ const RecipeList = (props) => {
                                 </Button>
                                 <Button
                                     className={"d-none d-md-block"}
+                                    style={{ marginRight: "15px" }}
                                     onClick={() =>
                                         setViewType((currentState) => {
                                             if (currentState === "bigDetail") return "smallDetail";
@@ -95,6 +96,15 @@ const RecipeList = (props) => {
                                 >
                                     <Icon size={1} path={isBigDetail ? mdiMagnifyMinusOutline : mdiMagnifyPlusOutline} />{" "}
                                     {isBigDetail ? "Malý detail" : "Velký detail"}
+                                </Button>
+                                <Button
+                                    className={"d-none d-md-block"}
+                                    style={{ marginRight: "15px" }}
+                                    variant={"light"}
+                                    type="submit"
+                                >
+                                    <Icon size={1} path={mdiPlus} />{" "}
+                                    Vytvořit recept
                                 </Button>
                             </Form>
                         </div>

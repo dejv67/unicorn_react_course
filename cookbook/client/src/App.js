@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Icon } from '@mdi/react';  // Ensure you use a named import
-import { mdiBookOpenVariant, mdiLoading } from '@mdi/js';
+import { mdiBookOpenVariant } from '@mdi/js';
 import {Outlet, useNavigate} from "react-router-dom";
 import {Container} from "react-bootstrap";
 import Nav from "react-bootstrap/Nav";
@@ -28,15 +27,15 @@ function App() {
                     <Navbar.Offcanvas id={`offcanvasNavbar-expand-sm`}>
                         <Offcanvas.Header closeButton>
                             <Offcanvas.Title id={`offcanvasNavbarLabel-expand-sm`}>
-                                Simple School
+                                Menu
                             </Offcanvas.Title>
                         </Offcanvas.Header>
                         <Offcanvas.Body>
                             <Nav className="justify-content-end flex-grow-1 pe-3">
-                                <Nav.Link onClick={() => navigate("/recipeList")}>
+                                <Nav.Link onClick={() => navigate("/recipes")}>
                                     Recepty
                                 </Nav.Link>
-                                <Nav.Link onClick={() => navigate("/ingredientList")}>
+                                <Nav.Link onClick={() => navigate("/ingredients")}>
                                     Ingredience
                                 </Nav.Link>
                             </Nav>

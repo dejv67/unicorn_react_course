@@ -5,9 +5,9 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import Home from "./routes/Home";
-import RecipeList from "./bricks/RecipeList";
 import RecipeDetail from "./routes/RecipeDetail";
-import IngredientList from "./bricks/IngredientList";
+import Recipes from "./routes/Recipes";
+import Ingredients from "./routes/Ingredients";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -16,9 +16,9 @@ root.render(
           <Routes>
               <Route path="/" element={<App />}>
                   <Route path="home" element={<Home />} />
-                  <Route path="recipeList" element={<RecipeList />} />
+                  <Route path="recipes" element={<Recipes />} />
                   <Route path="recipeDetail" element={<RecipeDetail />} />
-                  <Route path="ingredientList" element={<IngredientList />} />
+                  <Route path="ingredients" element={<Ingredients />} />
               </Route>
           </Routes>
       </BrowserRouter>
