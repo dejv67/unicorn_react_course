@@ -1,31 +1,52 @@
-import {Col, Modal, Row} from "react-bootstrap";
+import { Col, Modal, Row } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Icon from "@mdi/react";
-import {mdiPlus} from "@mdi/js";
+import { mdiPlus, mdiMinus } from "@mdi/js";
 
-
-function RecipeAddForm({ show, setShow}){
+function RecipeAddForm({ show, setShow }) {
     const [formData, setFormData] = useState({
-        name:"",
+        name: "",
         description: "",
-        ingredient: null,
-        count: 0,
-        unit: "",
+        ingredients: [{ ingredient: "", count: 0, unit: "" }],  // Pole pro více ingrediencí, prázdné stringy místo null
     });
     const [ingredientListCall, setIngredientListCall] = useState({
         state: "pending",
     });
 
-    const handleClose = () => setShow(false);
-
-    const setField = (name, val) => {
-        return setFormData((formData) => {
-            const newData = { ...formData };
-            newData[name] = val;
-            return newData;
+    // Funkce pro resetování formuláře
+    const resetForm = () => {
+        setFormData({
+            name: "",
+            description: "",
+            ingredients: [{ ingredient: "", count: 0, unit: "" }],  // Výchozí stav
         });
+    };
+
+    const handleClose = () => {
+        resetForm();  // Reset formuláře při zavření
+        setShow(false);
+    };
+
+    const setField = (index, field, value) => {
+        const newIngredients = [...formData.ingredients];
+        newIngredients[index][field] = value;
+        setFormData({ ...formData, ingredients: newIngredients });
+    };
+
+    const handleAddIngredient = () => {
+        setFormData((formData) => ({
+            ...formData,
+            ingredients: [...formData.ingredients, { ingredient: "", count: 0, unit: "" }],
+        }));
+    };
+
+    const handleRemoveIngredient = (index) => {
+        if (formData.ingredients.length > 1) {
+            const newIngredients = formData.ingredients.filter((_, i) => i !== index);
+            setFormData({ ...formData, ingredients: newIngredients });
+        }
     };
 
     useEffect(() => {
@@ -45,8 +66,7 @@ function RecipeAddForm({ show, setShow}){
         e.preventDefault();
         e.stopPropagation();
         const payload = { ...formData };
-        console.log("Submitted form data:", payload); // Log the form data
-        //if (onFormSubmit) onFormSubmit(payload); // Call the callback
+        console.log("Submitted form data:", payload);
     };
 
     return (
@@ -61,7 +81,7 @@ function RecipeAddForm({ show, setShow}){
                         <Form.Control
                             type="text"
                             value={formData.name}
-                            onChange={(e) => setField("name", e.target.value)}
+                            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                         />
                     </Form.Group>
 
@@ -70,44 +90,65 @@ function RecipeAddForm({ show, setShow}){
                         <Form.Control
                             as="textarea" rows={4}
                             value={formData.description}
-                            onChange={(e) => setField("description", e.target.value)}
+                            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                         />
                     </Form.Group>
 
-                    <Row>
-                        <Form.Group as={Col} md={8} lg={6} >
-                            <Form.Label>Ingredience</Form.Label>
-                            <Form.Select
-                                value={formData.ingredient}
-                                onChange={(e) => setField("ingredient", e.target.value)}
-                            >
-                                {ingredientListCall.state === "success" &&
-                                    ingredientListCall.data.map((ingredient) => (
-                                        <option key={ingredient.id} value={ingredient.id}>
-                                            {ingredient.name}
-                                        </option>
-                                    ))}
-                            </Form.Select>
-                        </Form.Group>
-
-                        <Form.Group as={Col} >
-                            <Form.Label>Počet</Form.Label>
-                            <Form.Control
-                                type="number"
-                                value={formData.count}
-                                onChange={(e) => setField("count", parseInt(e.target.value))}
-                            />
-                        </Form.Group>
-
-                        <Form.Group as={Col} >
-                            <Form.Label>Jednotka</Form.Label>
-                            <Form.Control
-                                type="text"
-                                value={formData.unit}
-                                onChange={(e) => setField("unit", e.target.value)}
-                            />
-                        </Form.Group>
+                    <Row className="mb-2">
+                        <Col md={6} lg={4}><Form.Label>Ingredience</Form.Label></Col>
+                        <Col md={3}><Form.Label>Počet</Form.Label></Col>
+                        <Col md={3}><Form.Label>Jednotka</Form.Label></Col>
                     </Row>
+
+                    {formData.ingredients.map((ingredient, index) => (
+                        <Row key={index} className="mb-3">
+                            <Form.Group as={Col} md={6} lg={4}>
+                                <Form.Select
+                                    value={ingredient.ingredient || ""}
+                                    onChange={(e) => setField(index, "ingredient", e.target.value)}
+                                >
+                                    <option value="">Vyber ingredienci</option>
+                                    {ingredientListCall.state === "success" &&
+                                        ingredientListCall.data.map((ing) => (
+                                            <option key={ing.id} value={ing.id}>
+                                                {ing.name}
+                                            </option>
+                                        ))}
+                                </Form.Select>
+                            </Form.Group>
+
+                            <Form.Group as={Col} md={3}>
+                                <Form.Control
+                                    type="number"
+                                    value={ingredient.count}
+                                    onChange={(e) => setField(index, "count", parseInt(e.target.value))}
+                                />
+                            </Form.Group>
+
+                            <Form.Group as={Col} md={3}>
+                                <Form.Control
+                                    type="text"
+                                    value={ingredient.unit}
+                                    onChange={(e) => setField(index, "unit", e.target.value)}
+                                />
+                            </Form.Group>
+
+                            <Col md={12} lg={2} className="d-flex align-items-center">
+                                <Button
+                                    variant="danger"
+                                    onClick={() => handleRemoveIngredient(index)}
+                                    className="ms-2"
+                                    disabled={formData.ingredients.length === 1}
+                                >
+                                    <Icon size={1} path={mdiMinus} />
+                                </Button>
+                            </Col>
+                        </Row>
+                    ))}
+
+                    <Button variant="primary" onClick={handleAddIngredient}>
+                        <Icon size={1} path={mdiPlus} /> Přidat ingredienci
+                    </Button>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="success" type="submit">
@@ -117,7 +158,7 @@ function RecipeAddForm({ show, setShow}){
                 </Modal.Footer>
             </Form>
         </Modal>
-    )
+    );
 }
 
-export default RecipeAddForm
+export default RecipeAddForm;
