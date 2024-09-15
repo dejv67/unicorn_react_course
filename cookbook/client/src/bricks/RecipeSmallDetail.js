@@ -14,7 +14,7 @@ const RecipeSmallDetail = (props) => {
                     <p className="card-text truncated-text">
                         {props.description}
                     </p>
-                    <IngredientList ingredients = {props.ingredients}/>
+                    <IngredientList ingredients = {props.ingredients} recipeId = {props.recipeId}/>
                 </div>
             </div>
         </div>

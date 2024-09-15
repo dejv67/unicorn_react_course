@@ -39,7 +39,7 @@ const IngredientList = (props) => {
                     <div>
                         <ul>
                             {props.ingredients.map(ingredient => (
-                                <li key={ingredient.id}>
+                                <li key={`${props.recipeId}-${ingredient.id}`}>
                                     <p>{getIngredientNameById(ingredient.id, ingredientListCall.data)}</p>
                                 </li>
                             ))}
