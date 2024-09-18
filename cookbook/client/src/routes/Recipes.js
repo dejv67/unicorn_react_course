@@ -10,7 +10,8 @@ function Recipes() {
         state: "pending",
     });
 
-    useEffect(() => {
+    const fetchRecipes = () => {
+        setRecipeListCall({ state: "pending" });
         fetch(`http://localhost:3000/recipe/list`, {
             method: "GET",
         }).then(async (response) => {
@@ -21,7 +22,18 @@ function Recipes() {
                 setRecipeListCall({ state: "success", data: responseJson });
             }
         }).catch(error => {setRecipeListCall({ state: "error", error: error })});
+    };
+
+    useEffect(() => {
+        fetchRecipes();
     }, []);
+
+    const handleAddRecipe = (newRecipe) => {
+        setRecipeListCall((prevState) => ({
+            ...prevState,
+            data: [...prevState.data, newRecipe], // Add the new recipe to the list
+        }));
+    };
 
     function getRecipes() {
         switch (recipeListCall.state) {
@@ -34,7 +46,7 @@ function Recipes() {
             case "success":
                 return (
                     <>
-                        <RecipeList recipeList={recipeListCall.data} />
+                        <RecipeList recipeList={recipeListCall.data} onReload={fetchRecipes} onRecipeAdded={handleAddRecipe}/>
                     </>
                 );
             case "error":

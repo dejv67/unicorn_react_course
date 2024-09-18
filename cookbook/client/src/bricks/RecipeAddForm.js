@@ -3,17 +3,20 @@ import Form from "react-bootstrap/Form";
 import React, { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Icon from "@mdi/react";
-import { mdiPlus, mdiMinus } from "@mdi/js";
+import {mdiPlus, mdiMinus, mdiLoading} from "@mdi/js";
 
-function RecipeAddForm({ show, setShow }) {
+function RecipeAddForm({ show, setShow, onComplete }) {
     const [validated, setValidated] = useState(false);
     const [formData, setFormData] = useState({
         name: "",
         description: "",
-        ingredients: [{ ingredient: "", count: 1, unit: "" }],  // Pole pro více ingrediencí, prázdné stringy místo null
+        ingredients: [{ ingredient: "", amount: 1, unit: "" }],  // Pole pro více ingrediencí, prázdné stringy místo null
     });
     const [ingredientListCall, setIngredientListCall] = useState({
         state: "pending",
+    });
+    const [addIngredientCall, setAddIngredientCall] = useState({
+        state: 'inactive'
     });
 
     // Funkce pro resetování formuláře
@@ -21,7 +24,7 @@ function RecipeAddForm({ show, setShow }) {
         setFormData({
             name: "",
             description: "",
-            ingredients: [{ ingredient: "", count: 1, unit: "" }],  // Výchozí stav
+            ingredients: [{ ingredient: "", amount: 1, unit: "" }],  // Výchozí stav
         });
         setValidated(false);
     };
@@ -40,7 +43,7 @@ function RecipeAddForm({ show, setShow }) {
     const handleAddIngredient = () => {
         setFormData((formData) => ({
             ...formData,
-            ingredients: [...formData.ingredients, { ingredient: "", count: 1, unit: "" }],
+            ingredients: [...formData.ingredients, { ingredient: "", amount: 1, unit: "" }],
         }));
     };
 
@@ -68,14 +71,46 @@ function RecipeAddForm({ show, setShow }) {
         const form = e.currentTarget;
         e.preventDefault();
         e.stopPropagation();
-        const payload = { ...formData };
 
         if (!form.checkValidity()) {
             setValidated(true);
             return;
         }
-        console.log("Submitted form data:", payload);
+
+        // Prepare the payload by converting 'ingredient' field to 'id'
+        const payload = {
+            ...formData,
+            ingredients: formData.ingredients.map(ingredient => ({
+                id: ingredient.ingredient, // Change 'ingredient' to 'id'
+                amount: ingredient.amount,
+                unit: ingredient.unit
+            }))
+        };
+
+        setAddIngredientCall({ state: 'pending' });
+        const res = await fetch(`http://localhost:3000/recipe/create`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+
+        if (res.status >= 400) {
+            setAddIngredientCall({ state: "error", error: data });
+        } else {
+            setAddIngredientCall({ state: "success", data });
+
+            if (typeof onComplete === 'function') {
+                onComplete(data);
+            }
+
+            handleClose();
+        }
     };
+
 
     return (
         <Modal show={show} onHide={handleClose} size="lg">
@@ -137,8 +172,8 @@ function RecipeAddForm({ show, setShow }) {
                             <Form.Group as={Col} md={3}>
                                 <Form.Control
                                     type="number"
-                                    value={ingredient.count}
-                                    onChange={(e) => setField(index, "count", parseInt(e.target.value))}
+                                    value={ingredient.amount}
+                                    onChange={(e) => setField(index, "amount", parseInt(e.target.value))}
                                     min={1}
                                     max={1000}
                                     required
@@ -179,9 +214,20 @@ function RecipeAddForm({ show, setShow }) {
                     </Button>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="success" type="submit">
-                        <Icon size={1} path={mdiPlus} />{" "}
-                        Vytvořit
+                    <div>
+                        {addIngredientCall.state === 'error' &&
+                            <div className="text-danger">Error: {addIngredientCall.error.errorMessage}</div>
+                        }
+                    </div>
+                    <Button variant="success" type="submit" disabled={addIngredientCall.state === 'pending'}>
+                        { addIngredientCall.state === 'pending' ? (
+                            <Icon size={0.8} path={mdiLoading} spin={true} />
+                        ) : (
+                            <div>
+                                <Icon size={1} path={mdiPlus}/>{" "}
+                                Vytvořit
+                            </div>
+                        )}
                     </Button>
                 </Modal.Footer>
             </Form>

@@ -9,7 +9,7 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 
 import Icon from "@mdi/react";
-import {mdiMagnifyMinusOutline, mdiMagnifyPlusOutline, mdiMagnify, mdiPlus} from "@mdi/js";
+import {mdiMagnifyMinusOutline, mdiMagnifyPlusOutline, mdiMagnify, mdiPlus, mdiReload} from "@mdi/js";
 import RecipeAddForm from "./RecipeAddForm";
 
 const RecipeList = (props) => {
@@ -20,7 +20,7 @@ const RecipeList = (props) => {
 
     const handleShowModal = () => setShow(true);
 
-    const filteredRecipeList = useMemo(() => {
+    let filteredRecipeList = useMemo(() => {
         return props.recipeList.filter((item) => {
             return (
                 item.name.toLocaleLowerCase().includes(searchBy.toLocaleLowerCase()) ||
@@ -36,6 +36,10 @@ const RecipeList = (props) => {
 
     function handleSearchDelete(event) {
         if (!event.target.value) setSearchBy("");
+    }
+
+    const handleRecipeAdded = (recipe) => {
+        props.onRecipeAdded(recipe);
     }
 
     function getRecipeList(recipeList, detailView) {
@@ -111,7 +115,14 @@ const RecipeList = (props) => {
                                     <Icon size={1} path={mdiPlus}/>{" "}
                                     <span className="hide-text-on-small"> Vytvořit recept</span>
                                 </Button>
-                                <RecipeAddForm show={isModalShown} setShow={setShow}/>
+                                <Button
+                                    variant="light"
+                                    className="text-muted"
+                                    onClick={props.onReload}
+                                >
+                                    <Icon size={1} path={mdiReload}></Icon>
+                                </Button>
+                                <RecipeAddForm show={isModalShown} setShow={setShow} onComplete={(recipe) => handleRecipeAdded(recipe)}/>
                             </Form>
                         </div>
                     </Navbar.Collapse>
