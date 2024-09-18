@@ -6,10 +6,11 @@ import Icon from "@mdi/react";
 import { mdiPlus, mdiMinus } from "@mdi/js";
 
 function RecipeAddForm({ show, setShow }) {
+    const [validated, setValidated] = useState(false);
     const [formData, setFormData] = useState({
         name: "",
         description: "",
-        ingredients: [{ ingredient: "", count: 0, unit: "" }],  // Pole pro více ingrediencí, prázdné stringy místo null
+        ingredients: [{ ingredient: "", count: 1, unit: "" }],  // Pole pro více ingrediencí, prázdné stringy místo null
     });
     const [ingredientListCall, setIngredientListCall] = useState({
         state: "pending",
@@ -20,8 +21,9 @@ function RecipeAddForm({ show, setShow }) {
         setFormData({
             name: "",
             description: "",
-            ingredients: [{ ingredient: "", count: 0, unit: "" }],  // Výchozí stav
+            ingredients: [{ ingredient: "", count: 1, unit: "" }],  // Výchozí stav
         });
+        setValidated(false);
     };
 
     const handleClose = () => {
@@ -38,7 +40,7 @@ function RecipeAddForm({ show, setShow }) {
     const handleAddIngredient = () => {
         setFormData((formData) => ({
             ...formData,
-            ingredients: [...formData.ingredients, { ingredient: "", count: 0, unit: "" }],
+            ingredients: [...formData.ingredients, { ingredient: "", count: 1, unit: "" }],
         }));
     };
 
@@ -63,17 +65,23 @@ function RecipeAddForm({ show, setShow }) {
     }, []);
 
     const handleSubmit = async (e) => {
+        const form = e.currentTarget;
         e.preventDefault();
         e.stopPropagation();
         const payload = { ...formData };
+
+        if (!form.checkValidity()) {
+            setValidated(true);
+            return;
+        }
         console.log("Submitted form data:", payload);
     };
 
     return (
-        <Modal show={show} onHide={handleClose}>
-            <Form onSubmit={(e) => handleSubmit(e)}>
+        <Modal show={show} onHide={handleClose} size="lg">
+            <Form noValidate validated={validated} onSubmit={(e) => handleSubmit(e)}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Vytvoř recept</Modal.Title>
+                    <Modal.Title>Nový recept</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form.Group className="mb-3">
@@ -82,7 +90,11 @@ function RecipeAddForm({ show, setShow }) {
                             type="text"
                             value={formData.name}
                             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                            required
                         />
+                        <Form.Control.Feedback type="invalid">
+                            Zadejte název receptu
+                        </Form.Control.Feedback>
                     </Form.Group>
 
                     <Form.Group className="mb-3">
@@ -91,6 +103,7 @@ function RecipeAddForm({ show, setShow }) {
                             as="textarea" rows={4}
                             value={formData.description}
                             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                            maxLength={2500}
                         />
                     </Form.Group>
 
@@ -106,6 +119,7 @@ function RecipeAddForm({ show, setShow }) {
                                 <Form.Select
                                     value={ingredient.ingredient || ""}
                                     onChange={(e) => setField(index, "ingredient", e.target.value)}
+                                    required
                                 >
                                     <option value="">Vyber ingredienci</option>
                                     {ingredientListCall.state === "success" &&
@@ -115,6 +129,9 @@ function RecipeAddForm({ show, setShow }) {
                                             </option>
                                         ))}
                                 </Form.Select>
+                                <Form.Control.Feedback type="invalid">
+                                    Vyberte ingredienci
+                                </Form.Control.Feedback>
                             </Form.Group>
 
                             <Form.Group as={Col} md={3}>
@@ -122,7 +139,13 @@ function RecipeAddForm({ show, setShow }) {
                                     type="number"
                                     value={ingredient.count}
                                     onChange={(e) => setField(index, "count", parseInt(e.target.value))}
+                                    min={1}
+                                    max={1000}
+                                    required
                                 />
+                                <Form.Control.Feedback type="invalid">
+                                    Povolený rozsah 1-1000
+                                </Form.Control.Feedback>
                             </Form.Group>
 
                             <Form.Group as={Col} md={3}>
@@ -130,7 +153,12 @@ function RecipeAddForm({ show, setShow }) {
                                     type="text"
                                     value={ingredient.unit}
                                     onChange={(e) => setField(index, "unit", e.target.value)}
+                                    maxLength={15}
+                                    required
                                 />
+                                <Form.Control.Feedback type="invalid">
+                                    Zadejte jednotku
+                                </Form.Control.Feedback>
                             </Form.Group>
 
                             <Col md={12} lg={2} className="d-flex align-items-center">
