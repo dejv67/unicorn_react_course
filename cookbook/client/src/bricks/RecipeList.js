@@ -50,6 +50,10 @@ const RecipeList = (props) => {
         setAddRecipeData({ data: null });
     }
 
+    const handleRecipeDeleted = (recipeId) => {
+        props.onRecipeDeleted(recipeId);
+    }
+
     function getRecipeList(recipeList, detailView) {
         return recipeList.map((recipe, index) => (
             <div className="col-12 col-sm-6 col-md-6 col-lg-3 mb-4" key={recipe.id}>
@@ -71,6 +75,7 @@ const RecipeList = (props) => {
                             ingredients={recipe.ingredients}
                             recipeId={recipe.id}
                             onEditRecipe = {(recipe) => handleAddRecipeData(recipe)}
+                            onDeleteRecipe = {(id) => handleRecipeDeleted(id)}
                         />
                     )}
                 </div>

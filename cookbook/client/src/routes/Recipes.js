@@ -41,6 +41,15 @@ function Recipes() {
         }));
     };
 
+    const handleDeleteRecipe = (recipeId) => {
+        if (recipeListCall.state === "success") {
+            setRecipeListCall({
+                state: "success",
+                data: recipeListCall.data.filter((r) => r.id !== recipeId)
+            });
+        }
+    }
+
     function getRecipes() {
         switch (recipeListCall.state) {
             case "pending":
@@ -52,7 +61,12 @@ function Recipes() {
             case "success":
                 return (
                     <>
-                        <RecipeList recipeList={recipeListCall.data} onReload={fetchRecipes} onRecipeAdded={handleAddRecipe}/>
+                        <RecipeList
+                            recipeList={recipeListCall.data}
+                            onReload={fetchRecipes}
+                            onRecipeAdded={handleAddRecipe}
+                            onRecipeDeleted={handleDeleteRecipe}
+                        />
                     </>
                 );
             case "error":
