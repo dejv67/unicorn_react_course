@@ -1,6 +1,7 @@
 import {mdiTrashCanOutline} from "@mdi/js";
 import Icon from "@mdi/react";
 import {useState} from "react";
+import Confirmation from "./Confirmation";
 
 export default function RecipeDelete({ recipeId, onDelete, onError }) {
     const [deleteRecipeCall, setDeleteRecipeCall] = useState({
@@ -39,11 +40,19 @@ export default function RecipeDelete({ recipeId, onDelete, onError }) {
     }
 
     return (
-        <Icon
-            onClick={handleDelete}
-            path={mdiTrashCanOutline}
-            style={{ cursor: 'pointer', color: 'red' }}
-            size={0.8}
-        ></Icon>
+        <Confirmation
+            title="Smazat recept"
+            message="Opravdu si přejete smazat recept?"
+            confirmText="Smazat"
+            onConfirm={handleDelete}
+        >
+            <div>
+                <Icon
+                    path={mdiTrashCanOutline}
+                    style={{ cursor: 'pointer', color: 'red' }}
+                    size={0.8}
+                ></Icon>
+            </div>
+        </Confirmation>
     )
 }
