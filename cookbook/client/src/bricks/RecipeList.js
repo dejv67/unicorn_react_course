@@ -1,6 +1,7 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useContext } from "react";
 import RecipeBigDetail from "./RecipeBigDetail";
 import RecipeSmallDetail from "./RecipeSmallDetail";
+import { UserContext } from '../UserProvider';
 
 import './css/RecipeList.css'
 
@@ -13,6 +14,7 @@ import {mdiMagnifyMinusOutline, mdiMagnifyPlusOutline, mdiMagnify, mdiPlus, mdiR
 import RecipeAddForm from "./RecipeAddForm";
 
 const RecipeList = (props) => {
+    const { isAuthorized } = useContext(UserContext);
     const [viewType, setViewType] = useState("smallDetail");
     const isBigDetail = viewType === "bigDetail";
     const [searchBy, setSearchBy] = useState("");
@@ -123,15 +125,17 @@ const RecipeList = (props) => {
                                     <Icon size={1} path={isBigDetail ? mdiMagnifyMinusOutline : mdiMagnifyPlusOutline} />{" "}
                                     {isBigDetail ? "Malý detail" : "Velký detail"}
                                 </Button>
-                                <Button
-                                    style={{marginRight: "15px"}}
-                                    variant={"light"}
-                                    type="submit"
-                                    onClick={handleShowModal}
-                                >
-                                    <Icon size={1} path={mdiPlus}/>{" "}
-                                    <span className="hide-text-on-small"> Vytvořit recept</span>
-                                </Button>
+                                {isAuthorized && (
+                                    <Button
+                                        style={{marginRight: "15px"}}
+                                        variant={"light"}
+                                        type="submit"
+                                        onClick={handleShowModal}
+                                    >
+                                        <Icon size={1} path={mdiPlus}/>{" "}
+                                        <span className="hide-text-on-small"> Vytvořit recept</span>
+                                    </Button>
+                                )}
                                 <Button
                                     variant="light"
                                     className="text-muted"
