@@ -17,8 +17,15 @@ const RecipeList = (props) => {
     const isBigDetail = viewType === "bigDetail";
     const [searchBy, setSearchBy] = useState("");
     const [isModalShown, setShow] = useState(false);
+    const [addRecipeData, setAddRecipeData] = useState({
+        data: null
+    });
 
     const handleShowModal = () => setShow(true);
+    const handleAddRecipeData = (data) => {
+        setAddRecipeData({ data: data });
+        handleShowModal();
+    }
 
     let filteredRecipeList = useMemo(() => {
         return props.recipeList.filter((item) => {
@@ -40,6 +47,7 @@ const RecipeList = (props) => {
 
     const handleRecipeAdded = (recipe) => {
         props.onRecipeAdded(recipe);
+        setAddRecipeData({ data: null });
     }
 
     function getRecipeList(recipeList, detailView) {
@@ -61,7 +69,8 @@ const RecipeList = (props) => {
                             description={recipe.description}
                             imgUri={recipe.imgUri}
                             ingredients={recipe.ingredients}
-                            recipeId={index}
+                            recipeId={recipe.id}
+                            onEditRecipe = {(recipe) => handleAddRecipeData(recipe)}
                         />
                     )}
                 </div>
@@ -122,7 +131,12 @@ const RecipeList = (props) => {
                                 >
                                     <Icon size={1} path={mdiReload}></Icon>
                                 </Button>
-                                <RecipeAddForm show={isModalShown} setShow={setShow} onComplete={(recipe) => handleRecipeAdded(recipe)}/>
+                                <RecipeAddForm
+                                    show={isModalShown}
+                                    setShow={setShow}
+                                    onComplete={(recipe) => handleRecipeAdded(recipe)}
+                                    recipe={addRecipeData.data}
+                                />
                             </Form>
                         </div>
                     </Navbar.Collapse>

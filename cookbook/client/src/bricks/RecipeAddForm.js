@@ -5,7 +5,7 @@ import Button from "react-bootstrap/Button";
 import Icon from "@mdi/react";
 import {mdiPlus, mdiMinus, mdiLoading} from "@mdi/js";
 
-function RecipeAddForm({ show, setShow, onComplete }) {
+function RecipeAddForm({ show, setShow, onComplete, recipe }) {
     const [validated, setValidated] = useState(false);
     const [formData, setFormData] = useState({
         name: "",
@@ -24,7 +24,7 @@ function RecipeAddForm({ show, setShow, onComplete }) {
         setFormData({
             name: "",
             description: "",
-            ingredients: [{ ingredient: "", amount: 1, unit: "" }],  // Výchozí stav
+            ingredients: [{ ingredient: "", amount: 1, unit: "" }],
         });
         setValidated(false);
     };
@@ -67,6 +67,23 @@ function RecipeAddForm({ show, setShow, onComplete }) {
         });
     }, []);
 
+    useEffect(() => {
+        if (recipe) {
+            setFormData({
+                id: recipe.recipeId,
+                name: recipe.name,
+                description: recipe.description,
+                ingredients: recipe.ingredients.map(ingredient => ({
+                    ingredient: ingredient.id,
+                    amount: ingredient.amount,
+                    unit: ingredient.unit
+                }))
+            });
+        } else {
+            resetForm();
+        }
+    }, [recipe]);
+
     const handleSubmit = async (e) => {
         const form = e.currentTarget;
         e.preventDefault();
@@ -76,7 +93,6 @@ function RecipeAddForm({ show, setShow, onComplete }) {
             setValidated(true);
             return;
         }
-
         // Prepare the payload by converting 'ingredient' field to 'id'
         const payload = {
             ...formData,
@@ -88,7 +104,7 @@ function RecipeAddForm({ show, setShow, onComplete }) {
         };
 
         setAddIngredientCall({ state: 'pending' });
-        const res = await fetch(`http://localhost:3000/recipe/create`, {
+        const res = await fetch(`http://localhost:3000/recipe/${recipe ? 'update' : 'create'}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -116,7 +132,7 @@ function RecipeAddForm({ show, setShow, onComplete }) {
         <Modal show={show} onHide={handleClose} size="lg">
             <Form noValidate validated={validated} onSubmit={(e) => handleSubmit(e)}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Nový recept</Modal.Title>
+                    <Modal.Title>{recipe ? 'Upravit' : 'Nový'} recept</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form.Group className="mb-3">
@@ -225,7 +241,7 @@ function RecipeAddForm({ show, setShow, onComplete }) {
                         ) : (
                             <div>
                                 <Icon size={1} path={mdiPlus}/>{" "}
-                                Vytvořit
+                                {recipe ? 'Uložit' : 'Vytvořit'}
                             </div>
                         )}
                     </Button>

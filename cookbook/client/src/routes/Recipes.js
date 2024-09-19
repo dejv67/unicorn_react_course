@@ -29,9 +29,15 @@ function Recipes() {
     }, []);
 
     const handleAddRecipe = (newRecipe) => {
+        let recipeList = [...recipeListCall.data];
+
+        if (newRecipe.id) {
+            recipeList = recipeList.filter((r) => r.id !== newRecipe.id);
+        }
+
         setRecipeListCall((prevState) => ({
             ...prevState,
-            data: [...prevState.data, newRecipe], // Add the new recipe to the list
+            data: [...recipeList, newRecipe]
         }));
     };
 
