@@ -65,6 +65,9 @@ const RecipeList = (props) => {
                             description={recipe.description}
                             imgUri={recipe.imgUri}
                             ingredients={recipe.ingredients}
+                            recipeId={recipe.id}
+                            onEditRecipe = {(recipe) => handleAddRecipeData(recipe)}
+                            onDeleteRecipe = {(id) => handleRecipeDeleted(id)}
                         />
                     ) : (
                         <RecipeSmallDetail
