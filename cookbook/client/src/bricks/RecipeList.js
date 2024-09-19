@@ -55,7 +55,7 @@ const RecipeList = (props) => {
     }
 
     function getRecipeList(recipeList, detailView) {
-        return recipeList.map((recipe, index) => (
+        return recipeList.map((recipe) => (
             <div className="col-12 col-sm-6 col-md-6 col-lg-3 mb-4" key={recipe.id}>
                 <div className="Recipe">
                     {detailView === "big" ? (
