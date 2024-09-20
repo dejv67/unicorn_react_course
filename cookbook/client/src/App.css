@@ -1,5 +1,6 @@
 .App {
   background-color: #282c34;
+  color: white;
   display: flex;
   flex-direction: column;
   padding: 0 60px; /* Přidání horizontálního paddingu */
@@ -12,4 +13,13 @@
 
 .custom-padding-top {
   padding-top: 100px;
+}
+
+.home-page {
+  background-color: #282c34; /* Dark background for home page */
+  color: white; /* Light text color */
+  min-height: 100vh; /* Ensure it covers the full viewport height */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

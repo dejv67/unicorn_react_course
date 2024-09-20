@@ -6,6 +6,7 @@ import {Container} from "react-bootstrap";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import Offcanvas from "react-bootstrap/Offcanvas";
+import Home from "./routes/Home";
 
 function App() {
     let navigate = useNavigate();
@@ -19,7 +20,7 @@ function App() {
                 variant="dark"
             >
                 <Container fluid>
-                    <Navbar.Brand onClick={() => navigate("/")}>
+                    <Navbar.Brand onClick={() => navigate("/home")}>
                         <Icon className="mdi" path={mdiBookOpenVariant} size={1} color="white"/>
                         David’s Cookbook
                     </Navbar.Brand>
