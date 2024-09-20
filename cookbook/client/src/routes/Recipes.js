@@ -83,7 +83,7 @@ function Recipes() {
     }
 
     return(
-        <div>
+        <div className="custom-padding-top">
             {getRecipes()}
         </div>
     )

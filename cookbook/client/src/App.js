@@ -43,7 +43,7 @@ function App() {
                     </Navbar.Offcanvas>
                 </Container>
             </Navbar>
-            <main className="custom-padding-top">
+            <main>
                 <Outlet/>
             </main>
         </div>

@@ -1,5 +1,5 @@
 function Ingredients() {
-    return <div>TODO Ingredients</div>;
+    return <div className="custom-padding-top">TODO Ingredients</div>;
 
 }
 
